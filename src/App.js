@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import { Route, Router, Switch } from "react-router-dom";
+import { Route, Router, Switch, Redirect } from "react-router-dom";
 
 import Feeds from './components/Feeds';
 import SignIn from './components/Signin';
@@ -22,6 +22,7 @@ const App = () => {
 							<Feeds />
 						</Main>
 					</PrivateRoute>
+					<Redirect exact from="/" to="signin" />
 				</Switch>
 			</Router>
 		</Fragment>
