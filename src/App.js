@@ -19,6 +19,7 @@ const App = () => {
 					<Route exact path="/signup" component={SignUp}></Route>
 					<PrivateRoute path='/feed' layout={Main} component={Feeds}></PrivateRoute>
 					<Redirect exact from="/" to="signin" />
+					<Redirect exact from="" to="/signin" />
 				</Switch>
 			</Router>
 		</Fragment>
