@@ -1,43 +1,55 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Route, Redirect } from 'react-router-dom';
 import API from './../api/api';
 
-const PrivateRoute = (props) => {	
+import { userContext } from './userContext';
 
-	const { component: Component,...rest } = props;
+class PrivateRoute extends React.Component{
 
-	const [user, setUser] = useState({});
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+    state={
+		redirect: false,
+		loading: true,
+        user:{}
+	}
+	
+    componentDidMount(){
+        API.post('user/checkToken',{},{withCredentials:true})
+        .then( res => {
+            if(res.status ===200){
+                this.setState({
+					loading: false, 
+					user: res.data
+				})
+            }
+        }).catch( err => {
+            this.setState({
+				loading: false,
+				redirect: true
+			})
+        })
+    }
+    render(){
 
-	useEffect(() => {
+        const { layout: Layout, component: Component, ...rest } = this.props;
+		const { redirect, loading } = this.state;
 		
-		API.post('user/checkToken',{},{withCredentials:true})
-			.then( res => {
-				if(res.status === 200){
-					setUser(res.data);
-					setIsAuthenticated(true);
-				} else {
-					setUser({});
-					setIsAuthenticated(false);
-				}
-			}).catch( err => {
-				console.log(err);
-			});
+		if(loading){
+            return null
+        }
 
-			return () => {
-				setUser({});
-				setIsAuthenticated(false);
-			}
-	}, []);
-
-	return(
-		<Route {...rest} render ={ (props) =>(
-			isAuthenticated === true
-				? <Component {...props}></Component>
-				: <Redirect to="/signin" />
-		)}/>
-	);
+        if(redirect){
+            return <Redirect to="/signin"/>
+		}
+		
+        return(
+            <Route {...rest} render ={ matchProps =>(
+                <userContext.Provider value={this.state.user}>
+                    <Layout><Component {...matchProps}></Component></Layout>
+                </userContext.Provider>
+            )}/>
+        );
+    }
 }
 
 export default PrivateRoute;

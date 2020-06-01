@@ -17,11 +17,7 @@ const App = () => {
 				<Switch>
 					<Route exact path="/signin" component={SignIn}></Route>
 					<Route exact path="/signup" component={SignUp}></Route>
-					<PrivateRoute path='/feed'>
-						<Main>
-							<Feeds />
-						</Main>
-					</PrivateRoute>
+					<PrivateRoute path='/feed' layout={Main} component={Feeds}></PrivateRoute>
 					<Redirect exact from="/" to="signin" />
 				</Switch>
 			</Router>
