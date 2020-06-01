@@ -10,9 +10,11 @@ const app = express();
 const userroutes = require("./routes/User.routes")
 
 const dbUrl = 'mongodb+srv://dileep:dileep@blogfeed-smartcow-1jqqp.mongodb.net/test?retryWrites=true&w=majority'
-app.use(bodyParser.json());
 app.use(
   cors({
+    origin: [
+      'http://localhost:3000','https://smart-cow-blog-feed.herokuapp.com/'
+    ],
     credentials: true
   })
 );
